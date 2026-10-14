@@ -159,6 +159,7 @@ import { resetModifierState } from "../states/modifiers";
 import { nthElementFromArray } from "../utils/arrays";
 import { fallbackLanguage, isLanguageAvailable } from "../utils/local-content";
 import { loadStressSidecar } from "./stress-marks";
+import { recordMissedWords } from "./kalinka-missed";
 
 let failReason = "";
 
@@ -925,6 +926,7 @@ export async function finish(difficultyFailed = false): Promise<void> {
     setLastEventLog(eventLog);
     setLastResult(structuredClone(completedEvent));
   });
+  recordMissedWords(eventLog);
 
   ///////// completed event ready
 

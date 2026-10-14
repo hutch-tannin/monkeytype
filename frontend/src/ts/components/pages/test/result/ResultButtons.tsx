@@ -6,6 +6,11 @@ import { getIsScreenshotting } from "../../../../states/core";
 import { showModal } from "../../../../states/modals";
 import { showNoticeNotification } from "../../../../states/notifications";
 import {
+  clearMissedWords,
+  downloadMissedWords,
+  missedWordCount,
+} from "../../../../test/kalinka-missed";
+import {
   captureAndCopyToClipboard,
   captureAndDownload,
 } from "../../../../test/screenshot";
@@ -87,6 +92,22 @@ export function ResultButtons(props: { glarses: boolean }): JSXElement {
                 void captureAndDownload();
               } else {
                 void captureAndCopyToClipboard();
+              }
+            }}
+          />
+        </Show>
+        <Show when={missedWordCount() > 0}>
+          <ResultButton
+            id="downloadKalinkaMissedButton"
+            text={`Download missed Kalinka words (${missedWordCount()})\n(shift click to clear)`}
+            fa={{ icon: "fa-file-download" }}
+            onClick={(event) => {
+              if (!event.shiftKey) {
+                downloadMissedWords();
+              } else if (
+                window.confirm("Clear all recorded missed Kalinka words?")
+              ) {
+                clearMissedWords();
               }
             }}
           />

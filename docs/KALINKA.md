@@ -99,3 +99,28 @@ is turned off because it would show the next letter).
 Code: `frontend/src/ts/test/dictation.ts`, the `dictation` entries in
 `packages/funbox/src/list.ts` and `funbox-functions.ts`, and the
 `consumeKeydown` funbox hook in `input/handlers/keydown.ts`.
+
+## Missed words -> Anki
+
+After every finished test, Russian words with wrong letters are added to a
+local log in this browser (`localStorage` key `kalinkaMissedWords`: plain
+lowercase word -> date -> number of wrong letters). Nothing is uploaded.
+
+On the result screen, **Download missed Kalinka words** (shown once something
+is logged) saves `kalinka-missed-words-YYYY-MM-DD.json`; shift-click clears
+the log. Format:
+
+```json
+{
+  "format": "kalinka-missed-words",
+  "version": 1,
+  "exported": "2026-10-14T22:49:56.703Z",
+  "words": [
+    { "word": "...", "errors": 4, "dates": { "2026-10-14": 4 }, "lastDate": "2026-10-14" }
+  ]
+}
+```
+
+kalinka-typing's `tag_typos.py` reads that file and tags the matching Kalinka
+notes `kalinka::typo` (dry run by default). Code:
+`frontend/src/ts/test/kalinka-missed.ts`, recorded from `TestLogic.finish`.
