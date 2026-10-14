@@ -8,6 +8,7 @@ import { randomIntFromRange } from "@monkeytype/util/numbers";
 import * as Arrays from "../../utils/arrays";
 import { save } from "./funbox-memory";
 import { ttsEvent } from "../../events/tts";
+import * as Dictation from "../dictation";
 import {
   showNoticeNotification,
   showErrorNotification,
@@ -50,6 +51,8 @@ export type FunboxFunctions = {
   handleSpace?: () => void;
   getEmulatedChar?: (event: KeyboardEvent) => string | null;
   handleKeydown?: (event: KeyboardEvent) => Promise<void>;
+  /** runs first on keydown; return true to swallow the key (no input, no emulation) */
+  consumeKeydown?: (event: KeyboardEvent) => boolean;
   getResultContent?: () => string;
   start?: () => void;
   restart?: () => void;
@@ -249,6 +252,26 @@ const list: Partial<Record<FunboxName, FunboxFunctions>> = {
         return;
       }
       if (params[0] !== undefined) ttsEvent.dispatch(params[0]);
+    },
+  },
+  dictation: {
+    applyConfig(): void {
+      // the keymap would show the next letter
+      setConfig("keymapMode", "off", {
+        nosave: true,
+      });
+    },
+    rememberSettings(): void {
+      save("keymapMode", Config.keymapMode);
+    },
+    toggleScript(params: string[]): void {
+      if (params[0] !== undefined) void Dictation.onWord(params[0]);
+    },
+    consumeKeydown(event: KeyboardEvent): boolean {
+      return Dictation.consumeKeydown(event);
+    },
+    restart(): void {
+      Dictation.reset();
     },
   },
   arrows: {

@@ -118,6 +118,13 @@ async function handleFunboxes(
 }
 
 export async function onKeydown(event: KeyboardEvent): Promise<void> {
+  for (const fb of getActiveFunboxesWithFunction("consumeKeydown")) {
+    if (fb.functions.consumeKeydown(event)) {
+      event.preventDefault();
+      return;
+    }
+  }
+
   // the emulator inserts the char itself. block the native input now -
   // preventDefault after an await that isn't instant comes too late and the
   // os layout's char gets typed as well

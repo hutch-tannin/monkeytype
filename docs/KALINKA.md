@@ -72,3 +72,30 @@ rendered `<letter>`, while the expected text and what you type stay unaccented.
 
 Code: `frontend/src/ts/test/stress-marks.ts`, used by `buildWordHTML` and
 `updateWordLetters` in `test-ui.ts`.
+
+## Dictation
+
+Funbox **dictation**: each word is played when it becomes the current word,
+and its text stays hidden until you type it (like the tts funbox, the keymap
+is turned off because it would show the next letter).
+
+- **Ctrl+Space** replays the current word, **Ctrl+Shift+Space** the sentence
+  (quote mode). The key is swallowed before layout emulation, so it never
+  types a space.
+- In quote mode the sentence is played first when the test starts, then the
+  first word.
+- Audio comes from `frontend/static/kalinka/audio/manifest.json`
+  (`words`: plain word -> file, `quotes`: language -> quote id -> file), built
+  by kalinka-typing from the note's own Anki recording, or Piper TTS when the
+  note has none.
+- Words without manifest audio (English, Spanish, words outside the Kalinka
+  list, or nothing synced) use the browser's `speechSynthesis`. The voice
+  language comes from the polyglot languages (or the test language, then
+  `spanish_kalinka`, then `english`) whose list has the word; Cyrillic is
+  always `ru-RU`.
+- Browsers block audio before the first key press; the first word may need
+  Ctrl+Space.
+
+Code: `frontend/src/ts/test/dictation.ts`, the `dictation` entries in
+`packages/funbox/src/list.ts` and `funbox-functions.ts`, and the
+`consumeKeydown` funbox hook in `input/handlers/keydown.ts`.

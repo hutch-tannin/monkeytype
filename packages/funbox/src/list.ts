@@ -450,6 +450,25 @@ const list: Record<FunboxName, FunboxMetadata> = {
     frontendFunctions: ["alterText"],
     name: "ALL_CAPS",
   },
+  dictation: {
+    description:
+      "Hear each word, then type it. The text appears as you type. Ctrl+Space replays the word, Ctrl+Shift+Space the sentence.",
+    canGetPb: false,
+    difficultyLevel: 1,
+    properties: ["hasCssFile", "changesWordsVisibility", "speaks"],
+    frontendForcedConfig: {
+      highlightMode: ["letter", "off"],
+    },
+    frontendFunctions: [
+      "applyConfig",
+      "rememberSettings",
+      "toggleScript",
+      "consumeKeydown",
+      "restart",
+    ],
+    name: "dictation",
+    cssModifications: ["words"],
+  },
   polyglot: {
     description: "Use words from multiple languages in a single test.",
     canGetPb: false,
