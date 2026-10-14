@@ -6,6 +6,7 @@ import * as CustomText from "./custom-text";
 import * as Caret from "./caret";
 import * as Misc from "../utils/misc";
 import * as Strings from "../utils/strings";
+import { getStressMarks, withStressMark } from "./stress-marks";
 import * as CompositionState from "../legacy-states/composition";
 import * as ResultWordHighlight from "../components/pages/test/result/result-word-highlight";
 import { getActivePage } from "../states/core";
@@ -394,7 +395,8 @@ function buildWordHTML(word: string, wordIndex: number): string {
 
   const funbox = findSingleActiveFunboxWithFunction("getWordHtml");
   const chars = Strings.splitIntoCharacters(word);
-  for (const char of chars) {
+  const stressMarks = funbox ? undefined : getStressMarks(word, wordIndex);
+  for (const [charIndex, char] of chars.entries()) {
     if (funbox) {
       retval += funbox.functions.getWordHtml(char, true);
     } else if (char === "\t") {
@@ -403,7 +405,7 @@ function buildWordHTML(word: string, wordIndex: number): string {
       newlineafter = true;
       retval += `<letter class='nlChar'><i class="fas fa-level-down-alt fa-rotate-90 fa-fw"></i></letter>`;
     } else {
-      retval += `<letter>${char}</letter>`;
+      retval += `<letter>${withStressMark(char, charIndex, stressMarks)}</letter>`;
     }
   }
   retval += "</div>";
@@ -719,6 +721,9 @@ function updateWordLetters({
 
         const inputChars = Strings.splitIntoCharacters(input);
         const currentWordChars = Strings.splitIntoCharacters(currentWord ?? "");
+        const stressMarks = funbox
+          ? undefined
+          : getStressMarks(currentWord ?? "", wordIndex);
         for (let i = 0; i < inputChars.length; i++) {
           const charCorrect = currentWordChars[i] === inputChars[i];
 
@@ -739,12 +744,12 @@ function updateWordLetters({
           }
 
           if (charCorrect) {
-            ret += `<letter class="correct ${tabChar}${nlChar}">${currentLetter}</letter>`;
+            ret += `<letter class="correct ${tabChar}${nlChar}">${withStressMark(currentLetter, i, stressMarks)}</letter>`;
           } else if (currentLetter === undefined) {
             const letter = displayTypedChar(inputChars[i]);
             ret += `<letter class="incorrect extra ${tabChar}${nlChar}">${letter}</letter>`;
           } else {
-            let charString = currentLetter;
+            let charString = withStressMark(currentLetter, i, stressMarks);
 
             if (
               Config.indicateTypos === "replace" ||
@@ -798,7 +803,7 @@ function updateWordLetters({
           } else if (currentLetter === "\n") {
             ret += `<letter class='nlChar'><i class="fas fa-level-down-alt fa-rotate-90 fa-fw"></i></letter>`;
           } else {
-            ret += `<letter>${currentLetter}</letter>`;
+            ret += `<letter>${withStressMark(currentLetter as string, i, stressMarks)}</letter>`;
           }
         }
       }

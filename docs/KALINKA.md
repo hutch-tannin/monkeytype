@@ -55,3 +55,20 @@ pnpm check-assets-quotes
   languages.
 - `check-assets` skips missing local language files.
 - Unit tests always run as if nothing was synced.
+
+## Stress marks
+
+Setting: appearance > **show stress marks** (`showStressMarks`, on by default).
+When `frontend/static/kalinka/russian_kalinka.stress.json` is synced, Russian
+words get an acute accent (U+0301, or a grave U+0300 for secondary stress)
+over the stressed vowel. It is display only: the mark is added inside the
+rendered `<letter>`, while the expected text and what you type stay unaccented.
+
+- Quote mode uses the quote's own stressed text (the sidecar's `quotes` map),
+  as long as its words line up with the quote's words.
+- Everything else (word mode, polyglot, upstream Russian lists, custom text)
+  looks words up in the sidecar's `words` map, ignoring capitals and
+  surrounding punctuation. Unknown words are shown as they are.
+
+Code: `frontend/src/ts/test/stress-marks.ts`, used by `buildWordHTML` and
+`updateWordLetters` in `test-ui.ts`.

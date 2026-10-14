@@ -477,6 +477,7 @@ export const ConfigSchema = z
     tapeMargin: TapeMarginSchema,
     smoothLineScroll: z.boolean(),
     showAllLines: z.boolean(),
+    showStressMarks: z.boolean(),
     alwaysShowDecimalPlaces: z.boolean(),
     typingSpeedUnit: TypingSpeedUnitSchema,
     startGraphsAtZero: z.boolean(),

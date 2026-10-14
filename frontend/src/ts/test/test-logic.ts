@@ -158,6 +158,7 @@ import { EventLog } from "./events/types";
 import { resetModifierState } from "../states/modifiers";
 import { nthElementFromArray } from "../utils/arrays";
 import { fallbackLanguage, isLanguageAvailable } from "../utils/local-content";
+import { loadStressSidecar } from "./stress-marks";
 
 let failReason = "";
 
@@ -435,6 +436,8 @@ async function init(): Promise<boolean> {
   if (!language || language.name !== Config.language) {
     return await init();
   }
+
+  await loadStressSidecar();
 
   if (getActivePage() === "test") {
     await Funbox.activate();

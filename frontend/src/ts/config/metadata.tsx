@@ -901,6 +901,15 @@ export const configMetadata: ConfigMetadataObject = {
     group: "appearance",
     description: "When enabled, the line transition will be animated.",
   },
+  showStressMarks: {
+    key: "showStressMarks",
+    fa: { icon: "fa-font" },
+    changeRequiresRestart: true,
+    displayString: "show stress marks",
+    group: "appearance",
+    description:
+      "Shows the stressed vowel of Russian words with an acute accent (е́) while you type, for words and quotes that have stress data (synced Kalinka content). Display only: you still type the word without the accent.",
+  },
   showAllLines: {
     key: "showAllLines",
     fa: { icon: "fa-align-left" },

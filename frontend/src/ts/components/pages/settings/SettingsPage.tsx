@@ -164,6 +164,7 @@ export function SettingsPage(): JSXElement {
             <SearchableAutoSetting key="tapeMargin" />
             <SearchableAutoSetting key="smoothLineScroll" />
             <SearchableAutoSetting key="showAllLines" />
+            <SearchableAutoSetting key="showStressMarks" />
             <SearchableAutoSetting key="alwaysShowDecimalPlaces" />
             <SearchableAutoSetting key="typingSpeedUnit" />
             <SearchableAutoSetting key="startGraphsAtZero" />

@@ -156,6 +156,7 @@ export const commands: CommandsSubgroup = {
       "tapeMargin",
       "smoothLineScroll",
       "showAllLines",
+      "showStressMarks",
       "typingSpeedUnit",
       "alwaysShowDecimalPlaces",
       "startGraphsAtZero",

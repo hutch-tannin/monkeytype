@@ -592,6 +592,11 @@ export const commandlineConfigMetadata: CommandlineConfigMetadataObject = {
       options: "fromSchema",
     },
   },
+  showStressMarks: {
+    subgroup: {
+      options: "fromSchema",
+    },
+  },
   typingSpeedUnit: {
     subgroup: {
       options: "fromSchema",

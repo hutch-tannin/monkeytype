@@ -54,6 +54,7 @@ const obj: Config = {
   stopOnError: "off",
   deleteOnError: "off",
   showAllLines: false,
+  showStressMarks: true,
   keymapMode: "off",
   keymapStyle: "staggered",
   keymapLegendStyle: "lowercase",
