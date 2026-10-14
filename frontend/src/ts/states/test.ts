@@ -5,13 +5,15 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { EventLog } from "../test/events/types";
 
 import { Challenge } from "@monkeytype/challenges";
-import { LayoutObject } from "@monkeytype/schemas/layouts";
+import { Layout } from "@monkeytype/schemas/configs";
+import { LayoutName, LayoutObject } from "@monkeytype/schemas/layouts";
 import { CompletedEvent, IncompleteTest } from "@monkeytype/schemas/results";
 import { createStore } from "solid-js/store";
 import { keymapEvent } from "../events/keymap";
 import { createSignalWithSetters } from "../hooks/createSignalWithSetters";
 import * as CustomText from "../test/custom-text";
 import { QuoteWithTextSplit } from "../types/quotes";
+import { isAutoLayout, resolveLayout } from "../utils/auto-layout";
 import { getLayout } from "../utils/json-data";
 import { mirrorLayoutKeys } from "../utils/key-converter";
 import { canQuickRestart } from "../utils/quick-restart";
@@ -188,20 +190,45 @@ createEffect(() => {
   );
 });
 
-export const getKeymapLayout = createMemo<{
-  layout: string;
-  layoutNameDisplayString: string;
-  isMirrored: boolean;
-}>(() => {
-  const isOverride = getConfig.keymapLayout === "overrideSync";
-  const raw = isOverride ? getConfig.layout : getConfig.keymapLayout;
+// text of the word being typed, kept in sync by TestWords.
+// auto layouts pick the layout from it.
+export const [getTargetWord, setTargetWord] = createSignal("");
 
-  const layout = raw === "default" ? "qwerty" : raw;
-  const layoutNameDisplayString = replaceUnderscoresWithSpaces(raw);
-  const isMirrored = getConfig.funbox.includes("layout_mirror");
+function resolveConfigLayout(layout: Layout): LayoutName {
+  // only track the target word when it can change the layout
+  return resolveLayout(layout, isAutoLayout(layout) ? getTargetWord() : "");
+}
 
-  return { layout: layout, layoutNameDisplayString, isMirrored };
-});
+export const getKeymapLayout = createMemo<
+  {
+    layout: string;
+    layoutNameDisplayString: string;
+    isMirrored: boolean;
+  },
+  undefined
+>(
+  () => {
+    const raw =
+      getConfig.keymapLayout === "overrideSync"
+        ? getConfig.layout
+        : getConfig.keymapLayout;
+
+    const layout = resolveConfigLayout(raw);
+    const layoutNameDisplayString = replaceUnderscoresWithSpaces(
+      isAutoLayout(raw) ? layout : raw,
+    );
+    const isMirrored = getConfig.funbox.includes("layout_mirror");
+
+    return { layout: layout, layoutNameDisplayString, isMirrored };
+  },
+  undefined,
+  {
+    equals: (a, b) =>
+      a.layout === b.layout &&
+      a.layoutNameDisplayString === b.layoutNameDisplayString &&
+      a.isMirrored === b.isMirrored,
+  },
+);
 
 const [getKeymapHighlightKey, setKeymapHighlightKey] = createSignal<
   string | undefined
@@ -230,15 +257,24 @@ keymapEvent.useListener(({ mode, key, correct }) => {
   }
 });
 
-const getInputLayout = createMemo<{
-  layout: string;
-  isMirrored: boolean;
-}>(() => {
-  return {
-    layout: getConfig.layout === "default" ? "qwerty" : getConfig.layout,
-    isMirrored: getConfig.funbox.includes("layout_mirror"),
-  };
-});
+const getInputLayout = createMemo<
+  {
+    layout: string;
+    isMirrored: boolean;
+  },
+  undefined
+>(
+  () => {
+    return {
+      layout: resolveConfigLayout(getConfig.layout),
+      isMirrored: getConfig.funbox.includes("layout_mirror"),
+    };
+  },
+  undefined,
+  {
+    equals: (a, b) => a.layout === b.layout && a.isMirrored === b.isMirrored,
+  },
+);
 
 const [inputLayoutObject, inputLayoutPromise] = useResourceWithPromise(
   getInputLayout,

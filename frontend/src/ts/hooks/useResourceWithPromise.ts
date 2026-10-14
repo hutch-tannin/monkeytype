@@ -7,15 +7,21 @@ export function useResourceWithPromise<TSource, TData>(
 ): [() => TData | undefined, { promise: Promise<void>; reset: () => void }] {
   const [resource] = createResource(source, loader);
   const { promise, reset, resolve, reject } = promiseWithResolvers();
+  let settled = false;
 
   createEffect(() => {
     const state = resource.state;
-    reset();
     if (state === "ready") {
       resolve();
-    }
-    if (state === "errored") {
+      settled = true;
+    } else if (state === "errored") {
       reject(new Error("failed to fetch resource"));
+      settled = true;
+    } else if (settled) {
+      // only swap the promise once it settled - callers awaiting the pending
+      // one would otherwise never be resolved
+      reset();
+      settled = false;
     }
   });
 

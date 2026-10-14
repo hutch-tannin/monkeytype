@@ -1,7 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
+const { setTargetWord } = vi.hoisted(() => ({ setTargetWord: vi.fn() }));
+
 vi.mock("../../src/ts/states/test", () => ({
   getActiveWordIndex: () => 0,
+  setTargetWord,
 }));
 
 import { words } from "../../src/ts/test/test-words";
@@ -9,6 +12,19 @@ import { words } from "../../src/ts/test/test-words";
 describe("test-words", () => {
   beforeEach(() => {
     words.reset();
+    setTargetWord.mockClear();
+  });
+
+  describe("target word", () => {
+    it("syncs the active word on push and reset", () => {
+      words.push("привет ", 0);
+      expect(setTargetWord).toHaveBeenLastCalledWith("привет");
+      words.push("hola ", 0);
+      // active index is still 0
+      expect(setTargetWord).toHaveBeenLastCalledWith("привет");
+      words.reset();
+      expect(setTargetWord).toHaveBeenLastCalledWith("");
+    });
   });
 
   describe("push", () => {

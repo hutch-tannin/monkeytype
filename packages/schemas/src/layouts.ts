@@ -242,6 +242,8 @@ export const LayoutNameSchema = z.enum(
     "nokwts",
     "vylet_v4",
     "armenian_hm_qwerty",
+    "blagovest",
+    "workman_altgr",
   ],
   {
     errorMap: customEnumErrorHandler("Must be a supported layout"),
@@ -249,6 +251,10 @@ export const LayoutNameSchema = z.enum(
 );
 
 export type LayoutName = z.infer<typeof LayoutNameSchema>;
+
+// not a layout file - resolves to a real layout per target word (see utils/auto-layout.ts in frontend)
+export const AutoLayoutNameSchema = z.enum(["auto_blagovest_workman"]);
+export type AutoLayoutName = z.infer<typeof AutoLayoutNameSchema>;
 
 const KeyLegendsSchema = z.array(z.string().length(1)).min(1).max(4);
 export type KeyLegends = z.infer<typeof KeyLegendsSchema>;

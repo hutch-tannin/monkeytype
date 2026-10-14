@@ -375,7 +375,10 @@ export const KeymapLayoutSchema = z
   .or(Layouts.LayoutNameSchema);
 export type KeymapLayout = z.infer<typeof KeymapLayoutSchema>;
 
-export const LayoutSchema = z.literal("default").or(Layouts.LayoutNameSchema);
+export const LayoutSchema = z
+  .literal("default")
+  .or(Layouts.AutoLayoutNameSchema)
+  .or(Layouts.LayoutNameSchema);
 export type Layout = z.infer<typeof LayoutSchema>;
 
 export const FontSizeSchema = z.number().positive();

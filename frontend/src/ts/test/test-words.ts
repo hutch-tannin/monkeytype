@@ -1,4 +1,5 @@
-import { getActiveWordIndex } from "../states/test";
+import { createComputed } from "solid-js";
+import { getActiveWordIndex, setTargetWord } from "../states/test";
 
 type CommitChar = " " | "\n" | "";
 
@@ -67,6 +68,7 @@ class Words {
     };
     this.list.push(wordObj);
     this.length = this.list.length;
+    this.syncTargetWord();
 
     return wordObj;
   }
@@ -74,6 +76,11 @@ class Words {
   reset(): void {
     this.list = [];
     this.length = 0;
+    this.syncTargetWord();
+  }
+
+  syncTargetWord(): void {
+    setTargetWord(this.getCurrent()?.text ?? "");
   }
 
   removeCommitCharacterFromLastWord(): void {
@@ -89,3 +96,6 @@ class Words {
 }
 
 export const words = new Words();
+
+// the active word index is reactive, the word list is not (see push/reset)
+createComputed(() => words.syncTargetWord());

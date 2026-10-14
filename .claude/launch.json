@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "frontend",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "set SERVER_OPEN=false&& pnpm dev-fe"],
+      "port": 3000
+    }
+  ]
+}

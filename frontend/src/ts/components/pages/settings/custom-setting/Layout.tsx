@@ -1,4 +1,5 @@
 import { Layout as LayoutSchema } from "@monkeytype/schemas/configs";
+import { AutoLayoutNameSchema } from "@monkeytype/schemas/layouts";
 import { JSXElement } from "solid-js";
 
 import { configMetadata } from "../../../../config/metadata";
@@ -9,10 +10,12 @@ import SlimSelect from "../../../ui/SlimSelect";
 import { SearchableSetting } from "../SearchableSetting";
 
 // built once - a new array on every read would make SlimSelect rebuild its options
-const layoutOptions = LayoutsList.map((layout) => ({
-  text: layout.replace(/_/g, " "),
-  value: layout,
-}));
+const layoutOptions = [...AutoLayoutNameSchema.options, ...LayoutsList].map(
+  (layout) => ({
+    text: layout.replace(/_/g, " "),
+    value: layout,
+  }),
+);
 
 export function Layout(): JSXElement {
   return (
