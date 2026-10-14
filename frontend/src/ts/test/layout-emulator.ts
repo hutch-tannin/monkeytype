@@ -6,6 +6,66 @@ import { __nonReactive } from "../states/test";
 let isAltGrPressed = false;
 const isPunctuationPattern = /\p{P}/u;
 
+// ansi and matrix layouts. iso uses the same keys plus IntlBackslash
+const ansiKeyEventCodes = [
+  "Backquote",
+  "Digit1",
+  "Digit2",
+  "Digit3",
+  "Digit4",
+  "Digit5",
+  "Digit6",
+  "Digit7",
+  "Digit8",
+  "Digit9",
+  "Digit0",
+  "Minus",
+  "Equal",
+  "KeyQ",
+  "KeyW",
+  "KeyE",
+  "KeyR",
+  "KeyT",
+  "KeyY",
+  "KeyU",
+  "KeyI",
+  "KeyO",
+  "KeyP",
+  "BracketLeft",
+  "BracketRight",
+  "Backslash",
+  "KeyA",
+  "KeyS",
+  "KeyD",
+  "KeyF",
+  "KeyG",
+  "KeyH",
+  "KeyJ",
+  "KeyK",
+  "KeyL",
+  "Semicolon",
+  "Quote",
+  "KeyZ",
+  "KeyX",
+  "KeyC",
+  "KeyV",
+  "KeyB",
+  "KeyN",
+  "KeyM",
+  "Comma",
+  "Period",
+  "Slash",
+  "Space",
+];
+
+/**
+ * Whether the emulator handles this key for every layout type. Lets the
+ * keydown handler block the native input synchronously, before it awaits.
+ */
+export function isEmulatedKeyCode(code: string): boolean {
+  return ansiKeyEventCodes.includes(code);
+}
+
 export async function getCharFromEvent(
   event: KeyboardEvent,
 ): Promise<string | null> {
@@ -40,56 +100,7 @@ export async function getCharFromEvent(
   let keyEventCodes: string[] = [];
 
   if (layout.type === "ansi") {
-    keyEventCodes = [
-      "Backquote",
-      "Digit1",
-      "Digit2",
-      "Digit3",
-      "Digit4",
-      "Digit5",
-      "Digit6",
-      "Digit7",
-      "Digit8",
-      "Digit9",
-      "Digit0",
-      "Minus",
-      "Equal",
-      "KeyQ",
-      "KeyW",
-      "KeyE",
-      "KeyR",
-      "KeyT",
-      "KeyY",
-      "KeyU",
-      "KeyI",
-      "KeyO",
-      "KeyP",
-      "BracketLeft",
-      "BracketRight",
-      "Backslash",
-      "KeyA",
-      "KeyS",
-      "KeyD",
-      "KeyF",
-      "KeyG",
-      "KeyH",
-      "KeyJ",
-      "KeyK",
-      "KeyL",
-      "Semicolon",
-      "Quote",
-      "KeyZ",
-      "KeyX",
-      "KeyC",
-      "KeyV",
-      "KeyB",
-      "KeyN",
-      "KeyM",
-      "Comma",
-      "Period",
-      "Slash",
-      "Space",
-    ];
+    keyEventCodes = ansiKeyEventCodes;
   } else if (layout.type === "iso") {
     keyEventCodes = [
       "Backquote",
@@ -143,56 +154,7 @@ export async function getCharFromEvent(
       "Space",
     ];
   } else if (layout.type === "matrix") {
-    keyEventCodes = [
-      "Backquote",
-      "Digit1",
-      "Digit2",
-      "Digit3",
-      "Digit4",
-      "Digit5",
-      "Digit6",
-      "Digit7",
-      "Digit8",
-      "Digit9",
-      "Digit0",
-      "Minus",
-      "Equal",
-      "KeyQ",
-      "KeyW",
-      "KeyE",
-      "KeyR",
-      "KeyT",
-      "KeyY",
-      "KeyU",
-      "KeyI",
-      "KeyO",
-      "KeyP",
-      "BracketLeft",
-      "BracketRight",
-      "Backslash",
-      "KeyA",
-      "KeyS",
-      "KeyD",
-      "KeyF",
-      "KeyG",
-      "KeyH",
-      "KeyJ",
-      "KeyK",
-      "KeyL",
-      "Semicolon",
-      "Quote",
-      "KeyZ",
-      "KeyX",
-      "KeyC",
-      "KeyV",
-      "KeyB",
-      "KeyN",
-      "KeyM",
-      "Comma",
-      "Period",
-      "Slash",
-      "Space",
-    ];
+    keyEventCodes = ansiKeyEventCodes;
   }
 
   if (!keyEventCodes.includes(event.code)) {

@@ -1,6 +1,9 @@
 import { Config } from "../../config/store";
 import * as TestLogic from "../../test/test-logic";
-import { getCharFromEvent } from "../../test/layout-emulator";
+import {
+  getCharFromEvent,
+  isEmulatedKeyCode,
+} from "../../test/layout-emulator";
 import { emulateInsertText } from "./insert-text";
 import {
   showNoticeNotification,
@@ -115,6 +118,13 @@ async function handleFunboxes(
 }
 
 export async function onKeydown(event: KeyboardEvent): Promise<void> {
+  // the emulator inserts the char itself. block the native input now -
+  // preventDefault after an await that isn't instant comes too late and the
+  // os layout's char gets typed as well
+  if (Config.layout !== "default" && isEmulatedKeyCode(event.code)) {
+    event.preventDefault();
+  }
+
   if (event.repeat) {
     // just ignore all repeats
     return;
