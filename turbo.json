@@ -40,7 +40,13 @@
       "dependsOn": ["build"]
     },
     "@monkeytype/frontend#check-assets": {
-      "dependsOn": ["^parallel", "@monkeytype/schemas#build"]
+      "dependsOn": ["^parallel", "@monkeytype/schemas#build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "static/languages/**",
+        "static/quotes/**",
+        "scripts/short-quotes.local.json"
+      ]
     },
     "//#lint-styles": {
       "dependsOn": ["^parallel"]

@@ -1,10 +1,13 @@
 import { defineConfig, UserWorkspaceConfig } from "vitest/config";
 import { languageHashes } from "./vite-plugins/language-hashes";
+import { localContent } from "./vite-plugins/local-content";
 import { envConfig } from "./vite-plugins/env-config";
 import solidPlugin from "vite-plugin-solid";
 
 const plugins = [
   languageHashes({ skip: true }),
+  // tests never depend on which gitignored content is synced
+  localContent({ skip: true }),
   envConfig({ isDevelopment: true, clientVersion: "TESTING", env: {} }),
   solidPlugin({ hot: false }),
 ];

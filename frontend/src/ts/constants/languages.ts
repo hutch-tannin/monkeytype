@@ -18,7 +18,13 @@ export const LanguageGroups: Record<string, Language[]> = {
     "english_medical",
     "english_legal",
   ],
-  spanish: ["spanish", "spanish_1k", "spanish_10k", "spanish_650k"],
+  spanish: [
+    "spanish",
+    "spanish_1k",
+    "spanish_10k",
+    "spanish_650k",
+    "spanish_kalinka",
+  ],
   french: [
     "french",
     "french_1k",
@@ -78,6 +84,20 @@ export const LanguageGroups: Record<string, Language[]> = {
     "russian_contractions",
     "russian_contractions_1k",
     "russian_abbreviations",
+    "russian_kalinka",
+    "russian_kalinka_seen",
+    "russian_kalinka_trilingual",
+    "russian_blagovest_1",
+    "russian_blagovest_2",
+    "russian_blagovest_3",
+    "russian_blagovest_4",
+    "russian_blagovest_5",
+    "russian_blagovest_6",
+    "russian_blagovest_7",
+    "russian_blagovest_8",
+    "russian_blagovest_9",
+    "russian_blagovest_10",
+    "russian_blagovest_11",
   ],
   polish: [
     "polish",
@@ -389,6 +409,28 @@ export const LanguageGroups: Record<string, Language[]> = {
   lao: ["lao"],
   sindhi: ["sindhi"],
 };
+
+/**
+ * Personal word lists synced from kalinka-typing. Their files are gitignored,
+ * so they may be missing: check-assets allows that and the app hides them.
+ */
+export const LocalLanguages: Language[] = [
+  "russian_kalinka",
+  "russian_kalinka_seen",
+  "russian_kalinka_trilingual",
+  "russian_blagovest_1",
+  "russian_blagovest_2",
+  "russian_blagovest_3",
+  "russian_blagovest_4",
+  "russian_blagovest_5",
+  "russian_blagovest_6",
+  "russian_blagovest_7",
+  "russian_blagovest_8",
+  "russian_blagovest_9",
+  "russian_blagovest_10",
+  "russian_blagovest_11",
+  "spanish_kalinka",
+];
 
 export type LanguageGroupName = keyof typeof LanguageGroups;
 export const LanguageGroupNames: LanguageGroupName[] = Array.from(

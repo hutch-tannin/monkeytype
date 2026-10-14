@@ -34,6 +34,7 @@ import { WordGenError } from "../../utils/word-gen-error";
 import { FunboxName, KeymapLayout, Layout } from "@monkeytype/schemas/configs";
 import { Language, LanguageObject } from "@monkeytype/schemas/languages";
 import { qs } from "../../utils/dom";
+import { isLanguageAvailable } from "../../utils/local-content";
 
 export type FunboxFunctions = {
   getWord?: (wordset?: Wordset, wordIndex?: number) => string;
@@ -662,14 +663,24 @@ const list: Partial<Record<FunboxName, FunboxFunctions>> = {
   },
   polyglot: {
     async withWords(_words) {
-      const promises = Config.customPolyglot.map(async (language) =>
-        JSONData.getLanguage(language).catch(() => {
-          showNoticeNotification(
-            `Failed to load language: ${language}. It will be ignored.`,
-          );
-          return null;
-        }),
+      const unsynced = Config.customPolyglot.filter(
+        (language) => !isLanguageAvailable(language),
       );
+      if (unsynced.length > 0) {
+        showNoticeNotification(
+          `Not synced on this machine, ignored: ${unsynced.join(", ")}`,
+        );
+      }
+      const promises = Config.customPolyglot
+        .filter(isLanguageAvailable)
+        .map(async (language) =>
+          JSONData.getLanguage(language).catch(() => {
+            showNoticeNotification(
+              `Failed to load language: ${language}. It will be ignored.`,
+            );
+            return null;
+          }),
+        );
 
       const languages = (await Promise.all(promises)).filter(
         (lang): lang is LanguageObject => lang !== null,

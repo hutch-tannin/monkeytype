@@ -5,7 +5,11 @@
  */
 
 import * as fs from "fs";
-import { LanguageGroups, LanguageList } from "../src/ts/constants/languages";
+import {
+  LanguageGroups,
+  LanguageList,
+  LocalLanguages,
+} from "../src/ts/constants/languages";
 import {
   Language,
   LanguageObject,
@@ -150,6 +154,14 @@ async function validateQuotes(): Promise<void> {
     fs.readFileSync("./scripts/short-quotes.json", "utf8"),
   ) as Record<QuoteData["language"], number[]>;
 
+  // gitignored allow-list for the synced local quote files (docs/KALINKA.md)
+  if (fs.existsSync("./scripts/short-quotes.local.json")) {
+    const localShortQuotes = JSON.parse(
+      fs.readFileSync("./scripts/short-quotes.local.json", "utf8"),
+    ) as Record<QuoteData["language"], number[]>;
+    Object.assign(shortQuotes, localShortQuotes);
+  }
+
   const quotesFiles = fs.readdirSync("./static/quotes/");
   for (let quotefilename of quotesFiles) {
     quotefilename = quotefilename.split(".")[0] as string;
@@ -256,6 +268,13 @@ async function validateLanguages(): Promise<void> {
         }),
       ) as LanguageObject;
     } catch (e) {
+      // local-only languages are gitignored and synced from kalinka-typing
+      if (
+        LocalLanguages.includes(language) &&
+        !fs.existsSync(`./static/languages/${language}.json`)
+      ) {
+        continue;
+      }
       problems.add(
         language,
         `missing json file frontend/static/languages/${language}.json`,

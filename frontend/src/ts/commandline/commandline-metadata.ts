@@ -15,6 +15,7 @@ import { KnownFontName } from "@monkeytype/schemas/fonts";
 import * as UI from "../ui";
 import { Validation } from "../types/validation";
 import { typedKeys } from "@monkeytype/util/objects";
+import { AvailableLanguageList } from "../utils/local-content";
 
 //TODO: remove display property and instead use optionsMetadata from configMetadata
 // eventually this file should be fully merged into config metadata, probably under the 'commandline' property
@@ -182,7 +183,7 @@ export const commandlineConfigMetadata: CommandlineConfigMetadataObject = {
   },
   language: {
     subgroup: {
-      options: "fromSchema",
+      options: AvailableLanguageList,
       display: (value) => {
         return getLanguageDisplayString(value);
       },

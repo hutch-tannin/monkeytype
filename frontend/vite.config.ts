@@ -15,6 +15,7 @@ import { fontawesomeSubset } from "./vite-plugins/fontawesome-subset";
 import { fontPreview } from "./vite-plugins/font-preview";
 import { envConfig } from "./vite-plugins/env-config";
 import { languageHashes } from "./vite-plugins/language-hashes";
+import { localContent } from "./vite-plugins/local-content";
 import { minifyJson } from "./vite-plugins/minify-json";
 import { versionFile } from "./vite-plugins/version-file";
 import { oxlintChecker } from "./vite-plugins/oxlint-checker";
@@ -99,6 +100,7 @@ function getPlugins({
   const plugins: PluginOption[] = [
     envConfig({ isDevelopment, clientVersion, env }),
     languageHashes({ skip: isDevelopment }),
+    localContent(),
     injectHTML() as PluginOption,
     tailwindcss(),
 

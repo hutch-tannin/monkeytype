@@ -157,6 +157,7 @@ import { isDevEnvironment } from "../utils/env";
 import { EventLog } from "./events/types";
 import { resetModifierState } from "../states/modifiers";
 import { nthElementFromArray } from "../utils/arrays";
+import { fallbackLanguage, isLanguageAvailable } from "../utils/local-content";
 
 let failReason = "";
 
@@ -413,6 +414,14 @@ async function init(): Promise<boolean> {
   TestWords.words.reset();
   resetActiveWordIndex();
 
+  if (!isLanguageAvailable(Config.language)) {
+    const fallback = fallbackLanguage(Config.language);
+    showNoticeNotification(
+      `${Strings.getLanguageDisplayString(Config.language)} is not synced on this machine (see docs/KALINKA.md), switching to ${fallback}`,
+    );
+    setConfig("language", fallback);
+  }
+
   showLoaderBar();
   const { data: language, error } = await tryCatch(
     JSONData.getLanguage(Config.language),
@@ -441,7 +450,7 @@ async function init(): Promise<boolean> {
 
   // polyglot mode, check to enable lazy mode if any support it
   if (getActiveFunboxNames().includes("polyglot")) {
-    const polyglotLanguages = Config.customPolyglot;
+    const polyglotLanguages = Config.customPolyglot.filter(isLanguageAvailable);
     const languagePromises = polyglotLanguages.map(async (langName) => {
       const { data: lang, error } = await tryCatch(
         JSONData.getLanguage(langName),

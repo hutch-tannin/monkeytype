@@ -11,7 +11,6 @@ import {
   Setter,
 } from "solid-js";
 
-import { LanguageList } from "../../constants/languages";
 import { LayoutsList } from "../../constants/layouts";
 import { createDebouncedSignal } from "../../hooks/createDebouncedSignal";
 import { hideLoaderBar, showLoaderBar } from "../../states/loader-bar";
@@ -21,6 +20,7 @@ import {
   showErrorNotification,
 } from "../../states/notifications";
 import * as JSONData from "../../utils/json-data";
+import { AvailableLanguageList } from "../../utils/local-content";
 import * as Misc from "../../utils/misc";
 import { AnimatedModal } from "../common/AnimatedModal";
 import { Button } from "../common/Button";
@@ -96,7 +96,7 @@ const presets: Record<string, FilterPreset> = {
   },
 };
 
-const languageOptions = LanguageList.map((lang) => ({
+const languageOptions = AvailableLanguageList.map((lang) => ({
   value: lang,
   text: lang.replace(/_/gi, " "),
 }));
